@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 export const listProductDetails = createAsyncThunk(
-  'productDetails/listProducts',
+  'productDetails/listProductDetails',
   async (id, thunkAPI) => {
     try {
       const { data } = await axios.get(`/api/products/${id}`)
