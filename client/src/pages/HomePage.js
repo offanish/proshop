@@ -6,14 +6,14 @@ import Product from '../components/Product'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 
-import { listProducts } from '../features/product/productListSlice'
+import { listProductsThunk } from '../features/product/productListSlice'
 
 const HomePage = () => {
   const dispatch = useDispatch()
   const productList = useSelector((state) => state.productList)
   const { loading, error, products } = productList
   useEffect(() => {
-    dispatch(listProducts())
+    dispatch(listProductsThunk())
   }, [dispatch])
 
   return (

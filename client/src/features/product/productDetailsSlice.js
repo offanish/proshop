@@ -1,21 +1,21 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-export const listProductDetails = createAsyncThunk(
+export const listProductDetailsThunk = createAsyncThunk(
   'productDetails/listProductDetails',
   async (id, thunkAPI) => {
     try {
       const { data } = await axios.get(`/api/products/${id}`)
       return data
     } catch (error) {
-      thunkAPI.rejectWithValue(error.response.data.message)
+      return thunkAPI.rejectWithValue(error.response.data.message)
     }
   }
 )
 
 const initialState = {
   product: {},
-  loading: true,
+  loading: false,
   error: '',
 }
 
@@ -24,14 +24,14 @@ const productDetailsSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(listProductDetails.pending, (state) => {
+      .addCase(listProductDetailsThunk.pending, (state) => {
         state.loading = true
       })
-      .addCase(listProductDetails.fulfilled, (state, action) => {
+      .addCase(listProductDetailsThunk.fulfilled, (state, action) => {
         state.loading = false
         state.product = action.payload
       })
-      .addCase(listProductDetails.rejected, (state, action) => {
+      .addCase(listProductDetailsThunk.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
       })

@@ -7,7 +7,7 @@ import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
-import { listProductDetails } from '../features/product/productDetailsSlice'
+import { listProductDetailsThunk } from '../features/product/productDetailsSlice'
 
 const ProductPage = () => {
   const [qty, setQty] = useState(1)
@@ -19,7 +19,7 @@ const ProductPage = () => {
   )
 
   useEffect(() => {
-    dispatch(listProductDetails(params.id))
+    dispatch(listProductDetailsThunk(params.id))
   }, [params.id, dispatch])
 
   const addToCartHandler = () => {

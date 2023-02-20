@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 
 import Message from '../components/Message'
-import { addItemToCart, removeItemFromCart } from '../features/cart/cartSlice'
+import { addToCartThunk, removeFromCartThunk } from '../features/cart/cartSlice'
 
 const CartPage = () => {
   const { id: productId } = useParams()
@@ -19,12 +19,12 @@ const CartPage = () => {
 
   useEffect(() => {
     if (productId) {
-      dispatch(addItemToCart({ productId, qty }))
+      dispatch(addToCartThunk({ productId, qty }))
     }
   }, [dispatch, productId, qty])
 
   const removeFromCartHandler = (id) => {
-    dispatch(removeItemFromCart(id))
+    dispatch(removeFromCartThunk(id))
   }
   const checkoutHandler = (id) => {
     navigate('/login?redirect=shipping')
@@ -61,7 +61,7 @@ const CartPage = () => {
                       value={item.qty}
                       onChange={(e) =>
                         dispatch(
-                          addItemToCart({
+                          addToCartThunk({
                             productId: item.product,
                             qty: parseInt(e.target.value),
                           })
