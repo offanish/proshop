@@ -12,6 +12,10 @@ import ShippingPage from './pages/ShippingPage'
 import PaymentPage from './pages/PaymentPage'
 import PlaceOrderPage from './pages/PlaceOrderPage'
 import OrderPage from './pages/OrderPage'
+import UserListPage from './pages/UserListPage'
+import UserEditPage from './pages/UserEditPage'
+import ProductListPage from './pages/ProductListPage'
+import ProductEditPage from './pages/ProductEditPage'
 
 const App = () => {
   return (
@@ -30,6 +34,14 @@ const App = () => {
             <Route path='/order/:id' element={<OrderPage />} />
             <Route path='/product/:id' element={<ProductPage />} />
             <Route path='/cart/:id?' element={<CartPage />} />
+            {/* admin */}
+            <Route path='/admin/userlist' element={<UserListPage />} />
+            <Route path='/admin/productlist' element={<ProductListPage />} />
+            <Route path='/admin/user/:id/edit' element={<UserEditPage />} />
+            <Route
+              path='/admin/product/:id/edit'
+              element={<ProductEditPage />}
+            />
           </Routes>
         </Container>
       </main>

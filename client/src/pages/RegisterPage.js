@@ -20,7 +20,7 @@ const RegisterPage = () => {
   const [searchParams] = useSearchParams()
   const redirect = searchParams.get('redirect')
     ? searchParams.get('redirect')
-    : '/'
+    : ''
 
   const dispatch = useDispatch()
   const { loading, error, userInfo } = useSelector((state) => state.user)
