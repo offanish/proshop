@@ -1,21 +1,25 @@
 import { useEffect } from 'react'
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 
-import { getOrderDetails, payOrder } from '../features/order/orderSlice'
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder,
+} from '../features/order/orderSlice'
 
 const OrderPage = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const { orderDetails, loading, error, paymentSuccess } = useSelector(
-    (state) => state.order
-  )
-
+  const { orderDetails, orderLoading, error, paymentSuccess, deliverSuccess } =
+    useSelector((state) => state.order)
+  const { userInfo } = useSelector((state) => state.user)
   let itemsPrice
   if (orderDetails?._id) {
     itemsPrice = orderDetails.orderItems.reduce(
@@ -25,8 +29,11 @@ const OrderPage = () => {
   }
 
   useEffect(() => {
+    if (!userInfo) {
+      navigate('/login')
+    }
     dispatch(getOrderDetails(id))
-  }, [dispatch, id, paymentSuccess])
+  }, [dispatch, id, paymentSuccess, deliverSuccess, navigate, userInfo])
 
   const successPaymentHandler = () => {
     const paymentResult = {
@@ -38,7 +45,11 @@ const OrderPage = () => {
     dispatch(payOrder({ orderId: orderDetails._id, paymentResult }))
   }
 
-  return loading ? (
+  const deliverHandler = () => {
+    dispatch(deliverOrder(orderDetails._id))
+  }
+
+  return orderLoading ? (
     <Loader />
   ) : error ? (
     <Message variant='danger'>{error}</Message>
@@ -161,6 +172,20 @@ const OrderPage = () => {
                   <Button onClick={successPaymentHandler}>PayPal</Button>
                 )}{' '}
               </ListGroup.Item>
+              {userInfo &&
+                userInfo.isAdmin &&
+                orderDetails.isPaid &&
+                !orderDetails.isDelivered && (
+                  <ListGroup.Item className='d-grid gap-2'>
+                    <Button
+                      type='button'
+                      className='btn btn-block'
+                      onClick={deliverHandler}
+                    >
+                      Mark as delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

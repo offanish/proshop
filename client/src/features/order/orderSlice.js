@@ -3,11 +3,14 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 
 const initialState = {
   loading: true,
+  orderLoading: true,
   createdOrder: {},
   orderDetails: {},
   success: false,
+  deliverSuccess: false,
   paymentSuccess: false,
   myOrders: [],
+  orders: [],
   error: '',
 }
 
@@ -72,6 +75,28 @@ export const payOrder = createAsyncThunk(
   }
 )
 
+export const deliverOrder = createAsyncThunk(
+  'order/deliverOrder',
+  async (orderId, thunkAPI) => {
+    try {
+      const { token } = thunkAPI.getState().user.userInfo
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      const { data } = await axios.put(
+        `/api/orders/${orderId}/deliver`,
+        {},
+        config
+      )
+      return data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message)
+    }
+  }
+)
+
 export const getMyOrders = createAsyncThunk(
   'order/getMyOrders',
   async (req, thunkAPI) => {
@@ -91,41 +116,66 @@ export const getMyOrders = createAsyncThunk(
   }
 )
 
+export const getOrders = createAsyncThunk(
+  'order/getOrders',
+  async (req, thunkAPI) => {
+    try {
+      const { token } = thunkAPI.getState().user.userInfo
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      const { data } = await axios.get(`/api/orders/`, config)
+      return data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message)
+    }
+  }
+)
+
 const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
     resetOrders(state) {
       state.myOrders = []
+      state.orders = []
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(payOrder.pending, (state) => {
-      state.loading = true
-    })
     builder.addCase(payOrder.fulfilled, (state) => {
       state.loading = false
       state.paymentSuccess = true
     })
-    builder.addCase(payOrder.rejected, (state, action) => {
+    builder.addCase(deliverOrder.fulfilled, (state) => {
       state.loading = false
-      state.error = action.payload
+      state.deliverSuccess = true
     })
     builder.addMatcher(
-      isAnyOf(
-        createOrder.pending,
-        getOrderDetails.pending,
-        getMyOrders.pending
-      ),
+      isAnyOf(payOrder.pending, deliverOrder.pending),
       (state) => {
         state.loading = true
       }
     )
     builder.addMatcher(
       isAnyOf(
+        createOrder.pending,
+        getOrderDetails.pending,
+        getMyOrders.pending,
+        getOrders.pending
+      ),
+      (state) => {
+        state.loading = true
+        state.orderLoading = true
+      }
+    )
+    builder.addMatcher(
+      isAnyOf(
         createOrder.fulfilled,
         getOrderDetails.fulfilled,
-        getMyOrders.fulfilled
+        getMyOrders.fulfilled,
+        getOrders.fulfilled
       ),
       (state, action) => {
         state.loading = false
@@ -135,9 +185,13 @@ const orderSlice = createSlice({
         }
         if (action.type === 'order/getOrderDetails/fulfilled') {
           state.orderDetails = action.payload
+          state.orderLoading = false
         }
         if (action.type === 'order/getMyOrders/fulfilled') {
           state.myOrders = action.payload
+        }
+        if (action.type === 'order/getOrders/fulfilled') {
+          state.orders = action.payload
         }
       }
     )
@@ -145,11 +199,15 @@ const orderSlice = createSlice({
       isAnyOf(
         createOrder.rejected,
         getOrderDetails.rejected,
-        getMyOrders.rejected
+        getMyOrders.rejected,
+        getOrders.rejected,
+        payOrder.rejected,
+        deliverOrder.rejected
       ),
       (state, action) => {
         state.loading = false
         state.error = action.payload
+        state.orderLoading = false
       }
     )
   },

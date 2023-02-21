@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import dotenv from 'dotenv'
+import morgan from 'morgan'
 import connectDB from './config/db.js'
 
 import notFound from './middleware/notFoundMiddleware.js'
@@ -15,6 +16,7 @@ dotenv.config()
 connectDB()
 
 const app = express()
+app.use(morgan('dev'))
 
 app.use(express.json())
 
