@@ -40,6 +40,7 @@ const App = () => {
             <Route path='/admin/productlist' element={<ProductListPage />} />
             <Route path='/admin/orderlist' element={<OrderListPage />} />
             <Route path='/admin/user/:id/edit' element={<UserEditPage />} />
+            <Route path='/search/:keyword' element={<HomePage />} />
             <Route
               path='/admin/product/:id/edit'
               element={<ProductEditPage />}

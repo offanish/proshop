@@ -3,9 +3,9 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 
 export const listProductsThunk = createAsyncThunk(
   'productList/listProducts',
-  async (req, thunkAPI) => {
+  async (keyword = '', thunkAPI) => {
     try {
-      const { data } = await axios.get('/api/products')
+      const { data } = await axios.get(`/api/products?keyword=${keyword}`)
       return data
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message)
@@ -71,12 +71,32 @@ export const updateProductThunk = createAsyncThunk(
   }
 )
 
+export const createProductReviewThunk = createAsyncThunk(
+  'product/createProductReview',
+  async ({ productId, review }, thunkAPI) => {
+    try {
+      const { token } = thunkAPI.getState().user.userInfo
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      await axios.post(`/api/products/${productId}/reviews`, review, config)
+      return
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message)
+    }
+  }
+)
+
 const initialState = {
   products: [],
   createdProduct: null,
   updatedProduct: null,
   loading: false,
   error: '',
+  success: false,
 }
 
 const productListSlice = createSlice({
@@ -86,6 +106,7 @@ const productListSlice = createSlice({
     productReset(state) {
       state.createdProduct = null
       state.updatedProduct = null
+      state.success = false
     },
   },
   extraReducers: (builder) => {
@@ -105,12 +126,17 @@ const productListSlice = createSlice({
         state.loading = false
         state.updatedProduct = action.payload
       })
+      .addCase(createProductReviewThunk.fulfilled, (state) => {
+        state.loading = false
+        state.success = true
+      })
       .addMatcher(
         isAnyOf(
           listProductsThunk.pending,
           deleteProductThunk.pending,
           createProductThunk.pending,
-          updateProductThunk.pending
+          updateProductThunk.pending,
+          createProductReviewThunk.pending
         ),
         (state) => {
           state.loading = true
@@ -121,7 +147,8 @@ const productListSlice = createSlice({
           listProductsThunk.rejected,
           deleteProductThunk.rejected,
           createProductThunk.rejected,
-          updateProductThunk.rejected
+          updateProductThunk.rejected,
+          createProductReviewThunk.rejected
         ),
         (state, action) => {
           state.loading = false

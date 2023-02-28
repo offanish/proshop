@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import Product from '../components/Product'
 import Message from '../components/Message'
@@ -10,11 +11,12 @@ import { listProductsThunk } from '../features/product/productListSlice'
 
 const HomePage = () => {
   const dispatch = useDispatch()
+  const { keyword } = useParams()
   const productList = useSelector((state) => state.productList)
   const { loading, error, products } = productList
   useEffect(() => {
-    dispatch(listProductsThunk())
-  }, [dispatch])
+    dispatch(listProductsThunk(keyword))
+  }, [dispatch, keyword])
 
   return (
     <>
