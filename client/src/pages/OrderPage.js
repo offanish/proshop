@@ -120,7 +120,7 @@ const OrderPage = () => {
                         </Col>
                         <Col>
                           <Link
-                            className='text-decoration-none'
+                            className='text-decoration-none text-dark'
                             to={`/product/${item.product}`}
                           >
                             {item.name}
@@ -169,7 +169,9 @@ const OrderPage = () => {
               </ListGroup.Item>
               <ListGroup.Item className='d-grid gap-2'>
                 {!orderDetails.isPaid && (
-                  <Button onClick={successPaymentHandler}>PayPal</Button>
+                  <Button onClick={successPaymentHandler} variant='dark'>
+                    PayPal
+                  </Button>
                 )}{' '}
               </ListGroup.Item>
               {userInfo &&
@@ -179,6 +181,7 @@ const OrderPage = () => {
                   <ListGroup.Item className='d-grid gap-2'>
                     <Button
                       type='button'
+                      variant='dark'
                       className='btn btn-block'
                       onClick={deliverHandler}
                     >

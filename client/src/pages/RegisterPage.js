@@ -88,9 +88,11 @@ const RegisterPage = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button className='my-3' type='submit' variant='primary'>
-          Register
-        </Button>
+        <div className='d-grid gap-2'>
+          <Button className='my-3' type='submit' variant='dark'>
+            Register
+          </Button>
+        </div>
       </Form>
       <Row>
         <Col>

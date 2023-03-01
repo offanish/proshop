@@ -57,9 +57,11 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Button className='my-3' type='submit' variant='primary'>
-          Sign In
-        </Button>
+        <div className='d-grid gap-2'>
+          <Button className='my-3' type='submit' variant='dark'>
+            Sign In
+          </Button>
+        </div>
       </Form>
       <Row>
         <Col>

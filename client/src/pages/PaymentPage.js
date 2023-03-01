@@ -43,7 +43,7 @@ const PaymentPage = () => {
             ></Form.Check>
           </Col>
         </Form.Group>
-        <Button className='my-3' type='submit' variant='primary'>
+        <Button className='my-3' type='submit' variant='dark'>
           Continue
         </Button>
       </Form>

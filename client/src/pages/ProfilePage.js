@@ -106,7 +106,7 @@ const ProfilePage = () => {
             ></Form.Control>
           </Form.Group>
 
-          <Button className='my-3' type='submit' variant='primary'>
+          <Button className='my-3' type='submit' variant='dark'>
             Update
           </Button>
         </Form>

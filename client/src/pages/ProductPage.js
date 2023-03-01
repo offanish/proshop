@@ -137,6 +137,7 @@ const ProductPage = () => {
                         onClick={addToCartHandler}
                         type='button'
                         disabled={product.countInStock === 0}
+                        variant='dark'
                       >
                         Add To Cart
                       </Button>
@@ -193,7 +194,7 @@ const ProductPage = () => {
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
-                      <Button type='submit' variant='primary'>
+                      <Button type='submit' variant='dark' className='my-3'>
                         Submit
                       </Button>
                     </Form>

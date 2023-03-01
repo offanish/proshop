@@ -87,7 +87,7 @@ const PlaceOrderPage = () => {
                         </Col>
                         <Col>
                           <Link
-                            className='text-decoration-none'
+                            className='text-decoration-none text-dark'
                             to={`/product/${item.product}`}
                           >
                             {item.name}
@@ -141,6 +141,7 @@ const PlaceOrderPage = () => {
                 <Button
                   disabled={cart.cartItems.length === 0}
                   onClick={placeOrderHandler}
+                  variant='dark'
                 >
                   Place Order
                 </Button>

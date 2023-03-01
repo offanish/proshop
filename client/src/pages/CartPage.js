@@ -52,7 +52,9 @@ const CartPage = () => {
                     ></Image>
                   </Col>
                   <Col md={3}>
-                    <Link to={`/product/${item.product}`}>{item.name}</Link>
+                    <Link to={`/product/${item.product}`} className='text-dark'>
+                      {item.name}
+                    </Link>
                   </Col>
                   <Col md={2}>${item.price}</Col>
                   <Col md={2}>
@@ -105,6 +107,7 @@ const CartPage = () => {
             </ListGroup.Item>
             <ListGroup.Item className='d-grid gap-2'>
               <Button
+                variant='dark'
                 type='button'
                 disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
